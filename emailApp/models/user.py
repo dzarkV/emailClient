@@ -4,6 +4,11 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 
 class UserManager(BaseUserManager):
+    """
+    Custom user manager model
+    for authentication.
+    """
+
     use_in_migrations = True
 
     def _create_user(self, email, password=None, **extra_fields):
@@ -19,13 +24,16 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, email, password=None, **extra_fields):
+        """
+        Creates and saves a User checking extrafields to single user in False.
+        """
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         """
-        Creates and saves a superuser with the given email and password.
+        Creates and saves a superuser with the given email and password with necesary extrafields to True.
         """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -39,6 +47,11 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    Custom user model
+    for client authentication.
+    """
+
     # id = models.AutoField(primary_key=True)
     email = models.EmailField('email', primary_key=True, max_length=30)
     password = models.CharField('password', max_length=256)
@@ -49,5 +62,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
-
 

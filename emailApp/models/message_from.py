@@ -3,6 +3,10 @@ from .message_to import MessageTo
 
 
 class MessageFrom(models.Model):
+    """
+    Message From model to store the message from the user.
+    """
+
     id = models.AutoField(primary_key=True)
     subject = models.CharField(max_length=200)
     body = models.TextField(max_length=500)
@@ -10,6 +14,4 @@ class MessageFrom(models.Model):
 
     from_user = models.ForeignKey(MessageTo, on_delete=models.CASCADE)
     # category_id = models.IntegerField()
-
-    # users = models.ManyToManyField(User)
     

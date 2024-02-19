@@ -13,5 +13,4 @@ class MessageFrom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     from_user = models.ForeignKey(MessageTo, on_delete=models.CASCADE)
-    # category_id = models.IntegerField()
-    
+    category_id = models.IntegerField(default=0)

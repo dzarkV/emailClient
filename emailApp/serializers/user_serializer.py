@@ -6,4 +6,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('email', 'password', 'name',)
+
+class UserToResponseSerializer(UserSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'name',)
         

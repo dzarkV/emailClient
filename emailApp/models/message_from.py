@@ -1,5 +1,5 @@
 from django.db import models
-from .message_to import MessageTo
+from .user import User
 
 
 class MessageFrom(models.Model):
@@ -12,5 +12,5 @@ class MessageFrom(models.Model):
     body = models.TextField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    from_user = models.ForeignKey(MessageTo, on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE)
     category_id = models.IntegerField(default=0)

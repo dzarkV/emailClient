@@ -9,10 +9,59 @@ from emailApp.serializers.message_to_serializer import MessageToSerializer
 from django.db import transaction
 
 class MessageView(APIView):
-    
+    """
+    API endpoint for handling messages.
+
+    Supports GET to retrieve messages and POST to create new messages.
+    """
+    def get(self, request):
+        """
+        Retrieve messages for a specified user.
+
+        :param request: HTTP request object.
+        :return: Response containing serialized messages or an error message.
+        """
+        try:
+            user_email = request.query_params.get('mail', None)
+            from_messages = MessageFrom.objects.filter(from_user=user_email)
+            to_messages = MessageTo.objects.filter(to_user=user_email)
+
+            messages_to = []
+            for to_message in to_messages:
+                message_id = to_message.message_id.id
+
+                corresponding_message = MessageFrom.objects.filter(id=message_id).first()
+                if corresponding_message:
+                    messages_to.append(corresponding_message)
+
+            all_messages = from_messages | MessageFrom.objects.filter(id__in=[msg.id for msg in messages_to])
+
+            serialized_messages = []
+            for message in all_messages:
+                serialized_messages.append({
+                    'message_id': message.id,
+                    'from_user_name': message.from_user.name,  
+                    'from_user': message.from_user.email,
+                    'to_user':  MessageTo.objects.filter(message_id=message.id).first().to_user.email if MessageTo.objects.filter(message_id=message.id).first() else None,
+                    'created_at': message.created_at.strftime('%d %b %Y'), 
+                    'subject': message.subject,
+                    'body': message.body,
+                    'category_id': message.category_id,
+                })
+
+            return Response(serialized_messages, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @transaction.atomic
     def post(self, request):
+        """
+        Create a new message.
+
+        :param request: HTTP request object containing message data.
+        :return: Response indicating success or failure.
+        """
         try:
             to_user_exists = User.objects.filter(email=request.data['to_user']).exists()
             from_user_exists = User.objects.filter(email=request.data['from_user']).exists()
@@ -47,32 +96,3 @@ class MessageView(APIView):
         except Exception as e:
             return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-    def get(self, request):
-        try:
-            user_email = request.query_params.get('mail', None)
-            # Obtener mensajes where from_user o to_user sea igual al correo proporcionado
-            from_messages = MessageFrom.objects.filter(from_user=user_email)
-            #to_messages = MessageTo.objects.filter(to_user=user_email)
-
-            # Combinar mensajes de ambas consultas
-            #all_messages = from_messages.union(to_messages)
-
-            # Serializar los mensajes
-            serialized_messages = []
-            for message in from_messages:
-                serialized_messages.append({
-                    'message_id': message.id,
-                    'from_user_name': message.from_user.name,  # Ajusta esto según la estructura de tu modelo de usuario
-                    'from_user': message.from_user.email,
-                    'to_user': message.from_user.email,
-                    'created_at': message.created_at.strftime('%d %b %Y'),  # Formatea la fecha según tus necesidades
-                    'subject': message.subject,
-                    'body': message.body,
-                    'category_id': message.category_id,
-                })
-
-            return Response(serialized_messages, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -25,5 +25,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/create", user_create.UserCreateView.as_view(), name="users create"),
     path("users/", user_list.UserListView.as_view(), name="users list"),
-    path("users/<str:email>/", user_list.UserListView.as_view(), name="users by email"),
+    path("users/?email=", user_list.UserListView.as_view(), name="users by email"),
 ]

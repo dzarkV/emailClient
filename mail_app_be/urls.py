@@ -17,7 +17,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from emailApp.views import user_create, user_list
+from emailApp.views import user_create, user_list, login
 
 
 # URL patterns for the mail_app_be project
@@ -26,4 +26,5 @@ urlpatterns = [
     path("users/create", user_create.UserCreateView.as_view(), name="users create"),
     path("users/", user_list.UserListView.as_view(), name="users list"),
     path("users/?email=", user_list.UserListView.as_view(), name="users by email"),
+    path("users/login", login.UsersLogin.as_view(), name="users login")
 ]

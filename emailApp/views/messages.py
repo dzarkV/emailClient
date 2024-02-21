@@ -43,7 +43,7 @@ class MessageView(APIView):
                     'from_user_name': message.from_user.name,  
                     'from_user': message.from_user.email,
                     'to_user':  MessageTo.objects.filter(message_id=message.id).first().to_user.email if MessageTo.objects.filter(message_id=message.id).first() else None,
-                    'created_at': message.created_at.strftime('%d %b %Y'), 
+                    'created_at': message.created_at.strftime('%d %b %Y %H:%M'), 
                     'subject': message.subject,
                     'body': message.body,
                     'category_id': message.category_id,

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,13 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-q6%+0!)!xl-o_azuo@%h67$uo0de6ax4wy-qfrr@xoa+ujc*vh"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Custom user model
 AUTH_USER_MODEL = 'emailApp.User'
@@ -76,6 +74,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "mail_app_be.wsgi.application"
 
+# Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-q6%+0!)!xl-o_azuo@%h67$uo0de6ax4wy-qfrr@xoa+ujc*vh")
+DEBUG = os.environ.get("DEBUG", "True")
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -83,10 +84,10 @@ WSGI_APPLICATION = "mail_app_be.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "email_db",
-        "USER": "postgres",
-        "PASSWORD": "user123",
-        "HOST": "127.0.0.1",
+        "NAME": os.environ.get("DB_NAME", "email_db"),
+        "USER": os.environ.get("DB_USER", "postgres"),
+        "PASSWORD": os.environ.get("DB_PASS", "user123"),
+        "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
         "PORT": "5432",
     }
 }

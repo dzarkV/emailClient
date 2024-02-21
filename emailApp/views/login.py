@@ -15,8 +15,7 @@ class UsersLogin(generics.CreateAPIView):
         Users' login, checking if the email and password are in queryset
         """
         try:
-            # if request.data == {}:
-            #     return Response({'message': 'Providemail and password'}, status=status.HTTP_400_BAD_REQUEST)
+
             # Get the user from the database
             user = get_user_model().objects.filter(email=request.data['email'], password=request.data['password']).first()
 

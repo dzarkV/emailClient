@@ -75,8 +75,8 @@ TEMPLATES = [
 WSGI_APPLICATION = "mail_app_be.wsgi.application"
 
 # Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
-SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.environ.get("DEBUG") 
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-q6%+0!)!xl-o_azuo@%h67$uo0de6ax4wy-qfrr@xoa+ujc*vh")
+DEBUG = os.environ.get("DEBUG", "True")
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -117,11 +117,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Bogota"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

@@ -16,6 +16,7 @@ class UserCreateView(generics.CreateAPIView):
         Create a new user. If the email already exists, return a 400 status code.
         """
         try:
+
             # Check if email is in the request data
             if 'email' not in request.data:
                 return Response({'email': ['This field is required']}, status=status.HTTP_400_BAD_REQUEST)
@@ -29,8 +30,10 @@ class UserCreateView(generics.CreateAPIView):
             # Replace the plain password with the hashed one in the request data
             request.data['password'] = hashed_password.decode('utf-8')
 
+
             # Serialize the request data
             serializer = UserSerializer(data=request.data) 
+
             queryset = get_user_model().objects.all()
 
             # Check if the email already exists

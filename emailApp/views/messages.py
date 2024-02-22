@@ -26,6 +26,9 @@ class MessageView(APIView):
             from_messages = MessageFrom.objects.filter(from_user=user_email)
             to_messages = MessageTo.objects.filter(to_user=user_email)
 
+            if not from_messages.exists() and not to_messages.exists():
+                return Response({'message': 'No messages for the specified user'}, status=status.HTTP_400_BAD_REQUEST)
+
             messages_to = []
             for to_message in to_messages:
                 message_id = to_message.message_id.id

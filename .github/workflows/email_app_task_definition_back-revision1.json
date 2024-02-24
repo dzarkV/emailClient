@@ -1,0 +1,113 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:637423626700:task-definition/email_app_task_definition_back:1",
+    "containerDefinitions": [
+        {
+            "name": "back_email_app",
+            "image": "637423626700.dkr.ecr.us-east-1.amazonaws.com/home9/email_app_repository_back",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "back_email_app-8000-tcp",
+                    "containerPort": 8000,
+                    "hostPort": 8000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "SECRET_KEY",
+                    "value": "django-insecure-q6%+0!)!xl-o_azuo@%h67$uo0de6ax4wy-qfrr@xoa+ujc*vh"
+                },
+                {
+                    "name": "DB_NAME",
+                    "value": "db_email_render_test"
+                },
+                {
+                    "name": "DB_HOST",
+                    "value": "dpg-cnbb0l6d3nmc73cumk1g-a.oregon-postgres.render.com"
+                },
+                {
+                    "name": "DB_PASS",
+                    "value": "bNTqBeGtkGIyzURn1PUTH8teU7SnvzY6"
+                },
+                {
+                    "name": "DEBUG",
+                    "value": "True"
+                },
+                {
+                    "name": "DB_USER",
+                    "value": "home9"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/email_app_task_definition_back",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            }
+        }
+    ],
+    "family": "email_app_task_definition_back",
+    "taskRoleArn": "arn:aws:iam::637423626700:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::637423626700:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2024-02-24T16:01:18.886Z",
+    "registeredBy": "arn:aws:iam::637423626700:user/mateo_vasco",
+    "tags": []
+}

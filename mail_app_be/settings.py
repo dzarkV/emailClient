@@ -76,7 +76,7 @@ WSGI_APPLICATION = "mail_app_be.wsgi.application"
 
 # Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-q6%+0!)!xl-o_azuo@%h67$uo0de6ax4wy-qfrr@xoa+ujc*vh")
-DEBUG = os.environ.get("DEBUG", "True")
+DEBUG = os.environ.get("DEBUG")
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -84,10 +84,10 @@ DEBUG = os.environ.get("DEBUG", "True")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "email_db"),
-        "USER": os.environ.get("DB_USER", "postgres"),
-        "PASSWORD": os.environ.get("DB_PASS", "user123"),
-        "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASS"),
+        "HOST": os.environ.get("DB_HOST"),
         "PORT": "5432",
     }
 }

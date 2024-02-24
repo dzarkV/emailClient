@@ -1,39 +1,15 @@
 version: '3.8'
 
 services:
-  db:
-    container_name: email_db
-    image: postgres:16
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASS}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 7s
-      timeout: 7s
-      retries: 30
-
-  api:
-    container_name: email_api
+  web:
     build: .
     ports:
       - "8000:8000"
-    depends_on:
-        db:
-          condition: service_healthy
     environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_HOST=db
-      - DB_PORT=5432
-
-volumes:
-  postgres_data:
+      - DB_NAME=
+      - DB_HOST=
+      - DB_USER=
+      - DB_PASS=
+      - DEBUG=
+    volumes:
+      - .:/home/app/webapp  # Mount the current directory to /home/app/webapp in the container

@@ -9,7 +9,7 @@ RUN apk update && apk add --no-cache postgresql-libs && \
     && apk --purge del .build-deps
 
 COPY . .
-EXPOSE 8000
+EXPOSE 5000
 
 CMD ["/bin/sh", "/app/django_run.sh"]
 

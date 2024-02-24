@@ -9,7 +9,7 @@
                 {
                     "name": "back_email_app-8000-tcp",
                     "containerPort": 8000,
-                    "hostPort": 5000,
+                    "hostPort": 8000,
                     "protocol": "tcp",
                     "appProtocol": "http"
                 }

@@ -13,3 +13,4 @@ services:
       - DEBUG=
     volumes:
       - .:/home/app/webapp  # Mount the current directory to /home/app/webapp in the container
+

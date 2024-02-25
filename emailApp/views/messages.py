@@ -90,7 +90,7 @@ class MessageView(APIView):
                 serializer_to = MessageToSerializer(data=message_to_data)
                 if serializer_to.is_valid():
                     serializer_to.save()
-                    return Response({'message': 'Message created successfully'}, status=status.HTTP_201_CREATED)
+                    return Response({'message': 'Message sent successfully'}, status=status.HTTP_201_CREATED)
                 else:
                     return Response({'message': 'Invalid data for MessageTo'}, status=status.HTTP_400_BAD_REQUEST)
             else:

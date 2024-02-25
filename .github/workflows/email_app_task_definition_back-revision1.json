@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:637423626700:task-definition/email_app_task_definition_back:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:637423626700:task-definition/email_app_task_definition_back:7",
     "containerDefinitions": [
         {
             "name": "back_email_app",
-            "image": "637423626700.dkr.ecr.us-east-1.amazonaws.com/home9/email_app_repository_back",
+            "image": "637423626700.dkr.ecr.us-east-1.amazonaws.com/home9/email_app_repository_back:448f506f8bd8105ed539c2915ba71b5227c7ed70",
             "cpu": 0,
             "portMappings": [
                 {
@@ -41,10 +41,8 @@
                     "value": "home9"
                 }
             ],
-            "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
-            "ulimits": [],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
@@ -61,7 +59,7 @@
     "taskRoleArn": "arn:aws:iam::637423626700:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::637423626700:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 7,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -101,13 +99,13 @@
     "requiresCompatibilities": [
         "FARGATE"
     ],
-    "cpu": "1024",
-    "memory": "2048",
+    "cpu": "512",
+    "memory": "1024",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-02-24T16:01:18.886Z",
+    "registeredAt": "2024-02-25T16:36:40.273Z",
     "registeredBy": "arn:aws:iam::637423626700:user/mateo_vasco",
     "tags": []
 }

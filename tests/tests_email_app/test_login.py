@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase
 from tests.factories.user_factory import UserFactory
 from emailApp.serializers import UserSerializer
 from rest_framework import status
+from django.test import tag
 
 class TestLogin(APITestCase):
     """
@@ -10,8 +11,10 @@ class TestLogin(APITestCase):
 
     login_url = '/users/login'
 
+    @tag('login')
     def test_login(self):
         user = UserFactory().create_user()
+        user.password = "password"
         response = self.client.post(self.login_url, UserSerializer(user).data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     

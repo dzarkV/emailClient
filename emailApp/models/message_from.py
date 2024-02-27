@@ -1,5 +1,6 @@
 from django.db import models
 from .user import User
+from .categories import Categories
 
 
 class MessageFrom(models.Model):
@@ -13,4 +14,4 @@ class MessageFrom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     from_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category_id = models.IntegerField(default=0)
+    category_id = models.ForeignKey(Categories, on_delete=models.CASCADE)

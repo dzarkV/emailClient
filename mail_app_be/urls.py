@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from emailApp.views import user_create, user_list, messages, login
+from emailApp.views import user_create, user_list, messages, login, categories
 
 
 
@@ -31,6 +31,8 @@ urlpatterns = [
     path("users/login", login.UsersLogin.as_view(), name="users login"),
     path("messages/create", messages.MessageView.as_view(), name="messages create"),
     path("messages/getAll", messages.MessageView.as_view(), name="messages list"),
+    path("category/create", categories.CategoryView.as_view(), name="categories create"),
+    path("category/getAll/", categories.CategoryView.as_view(), name="categories list"),
 
 ]
 

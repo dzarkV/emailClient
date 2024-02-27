@@ -1,6 +1,10 @@
 name: Deploy to Amazon ECS
 
 on:
+  workflow_run:
+    workflows: ["Run django tests"]
+    types:
+      - completed
   push:
     branches: ["main"]
 

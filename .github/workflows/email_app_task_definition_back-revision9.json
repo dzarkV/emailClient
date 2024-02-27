@@ -1,13 +1,15 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:637423626700:task-definition/email_app_task_definition_back:7",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:637423626700:task-definition/email_app_task_definition_back:9",
     "containerDefinitions": [
         {
-            "name": "back_email_app",
-            "image": "637423626700.dkr.ecr.us-east-1.amazonaws.com/home9/email_app_repository_back:448f506f8bd8105ed539c2915ba71b5227c7ed70",
+            "name": "back_email_app_container",
+            "image": "637423626700.dkr.ecr.us-east-1.amazonaws.com/home9/email_app_repository_back",
             "cpu": 0,
+            "memory": 1024,
+            "memoryReservation": 1024,
             "portMappings": [
                 {
-                    "name": "back_email_app-8000-tcp",
+                    "name": "back_email_app_container-8000-tcp",
                     "containerPort": 8000,
                     "hostPort": 8000,
                     "protocol": "tcp",
@@ -41,8 +43,10 @@
                     "value": "home9"
                 }
             ],
+            "environmentFiles": [],
             "mountPoints": [],
             "volumesFrom": [],
+            "ulimits": [],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
@@ -59,7 +63,7 @@
     "taskRoleArn": "arn:aws:iam::637423626700:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::637423626700:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 7,
+    "revision": 9,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -74,6 +78,9 @@
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
         },
         {
             "name": "com.amazonaws.ecs.capability.task-iam-role"
@@ -105,7 +112,12 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-02-25T16:36:40.273Z",
+    "registeredAt": "2024-02-27T01:17:59.864Z",
     "registeredBy": "arn:aws:iam::637423626700:user/mateo_vasco",
-    "tags": []
+    "tags": [
+        {
+            "key": "group",
+            "value": "home_group_9"
+        }
+    ]
 }

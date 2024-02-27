@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from emailApp.serializers.user_serializer import UserSerializer
-import bcrypt
 
 class UserCreateView(generics.CreateAPIView):
     """
@@ -17,26 +16,16 @@ class UserCreateView(generics.CreateAPIView):
         """
         try:
 
-            # Check if email is in the request data
+            # # Check if email is in the request data
             if 'email' not in request.data:
                 return Response({'email': ['This field is required']}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Extract the password from the request
-            password = request.data.get('password')
-
-            # Hash the password using bcrypt
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
-            # Replace the plain password with the hashed one in the request data
-            request.data['password'] = hashed_password.decode('utf-8')
-
 
             # Serialize the request data
             serializer = UserSerializer(data=request.data) 
 
             queryset = get_user_model().objects.all()
 
-            # Check if the email already exists
+            # # Check if the email already exists
             if queryset.filter(email=request.data['email']).exists():
                 return Response({'message': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
             

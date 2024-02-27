@@ -8,9 +8,9 @@ class UserFactory:
 
     def build_user_JSON(self):
         return {
-            'email': 'test@mail.com',
-            'password': 'password',
-            'name': 'test'
+            "email": "test@mail.com",
+            "password": "password",
+            "name": "test"
         }
     
     def create_user(self) -> User:

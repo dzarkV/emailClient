@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from emailApp.models.user import User
+from emailApp.models.categories import Categories
 from emailApp.models.message_from import MessageFrom
 from emailApp.models.message_to import MessageTo
 from emailApp.serializers.message_from_serializer import MessageFromSerializer
@@ -76,11 +77,10 @@ class MessageView(APIView):
                 'subject': request.data['subject'],
                 'body': request.data['body'],
                 'from_user': User.objects.get(email=request.data['from_user']),
-                'category_id': 0 
+                'category_id': request.data.get('category_id', 0)
             } 
-
             serializer_from = MessageFromSerializer(data=message_data)
-
+            
             if serializer_from.is_valid():
                 instance_from = serializer_from.save(from_user=User.objects.get(email=request.data['from_user']))
                 message_to_data = {
@@ -98,4 +98,31 @@ class MessageView(APIView):
 
         except Exception as e:
             return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def patch(self, request):
+        try:
+            message_id = request.data.get('message_id')
+            new_category_id = request.data.get('category_id')
+
+            if message_id is None or new_category_id is None:
+                return Response({'message': 'Both message_id and category_id are required for the patch operation.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            message_instance = MessageFrom.objects.get(id=message_id)
+            category_instance = Categories.objects.get(category_id=new_category_id)
+
+            message_instance.category_id = category_instance
+            message_instance.save()
+
+            serializer = MessageFromSerializer(message_instance)
+            return Response({'message': 'Message update successfully.'}, status=status.HTTP_200_OK)
+
+        except MessageFrom.DoesNotExist:
+                return Response({'message': 'Message not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Categories.DoesNotExist:
+                return Response({'message': 'Category not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+                return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 

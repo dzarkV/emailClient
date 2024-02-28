@@ -18,9 +18,7 @@ class UserManager(BaseUserManager):
 
         if not email:
             raise ValueError('Users must be email address!')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
-        # psswd = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        user.set_password(password)
+        user = self.model(email=self.normalize_email(email), password=password, **extra_fields)
         user.save(using=self._db)
         return user
 
@@ -64,8 +62,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Overwrite the save method to hash the password
         """
-        self.password = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        super(User, self).save(*args, **kwargs)
+        if self.is_superuser:
+            self.set_password(self.password)
+            super(User, self).save(*args, **kwargs)
+        else:
+            self.password = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            super(User, self).save(*args, **kwargs)
 
     objects = UserManager()
     USERNAME_FIELD = 'email'

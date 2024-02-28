@@ -35,6 +35,7 @@ urlpatterns = [
     path("messages/filterByCategory", messages_filter.MessageViewFilter.as_view(), name="filter by category"),
     path("category/create", categories.CategoryView.as_view(), name="categories create"),
     path("category/getAll", categories.CategoryView.as_view(), name="categories list"),
+    path("messages/delete", messages_filter.MessageViewFilter.as_view(), name="delete message"),
 
 ]
 

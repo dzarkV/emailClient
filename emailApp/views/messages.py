@@ -8,7 +8,6 @@ from emailApp.models.message_to import MessageTo
 from emailApp.serializers.message_from_serializer import MessageFromSerializer
 from emailApp.serializers.message_to_serializer import MessageToSerializer
 from django.db import transaction
-from rest_framework.decorators import action
 
 
 class MessageView(APIView):
@@ -46,19 +45,20 @@ class MessageView(APIView):
 
             serialized_messages = []
             for message in all_messages:
-                serialized_messages.append({
-                    'message_id': message.id,
-                    'from_user_name': message.from_user.name,  
-                    'from_user': message.from_user.email,
-                    'to_user':  MessageTo.objects.filter(message_id=message.id).first().to_user.email if MessageTo.objects.filter(message_id=message.id).first() else None,
-                    'to_user_name': MessageTo.objects.filter(message_id=message.id).first().to_user.name if MessageTo.objects.filter(message_id=message.id).first() else None,
-                    'created_at': message.created_at.strftime('%d %b %Y %H:%M'), 
-                    'subject': message.subject,
-                    'body': message.body,
-                    'category_id': message.category_id.category_id,
-                    'category_name': message.category_id.category_name,
-                    'color': message.category_id.color,
-                })
+                if message.isActive == True:
+                    serialized_messages.append({
+                        'message_id': message.id,
+                        'from_user_name': message.from_user.name,  
+                        'from_user': message.from_user.email,
+                        'to_user':  MessageTo.objects.filter(message_id=message.id).first().to_user.email if MessageTo.objects.filter(message_id=message.id).first() else None,
+                        'to_user_name': MessageTo.objects.filter(message_id=message.id).first().to_user.name if MessageTo.objects.filter(message_id=message.id).first() else None,
+                        'created_at': message.created_at.strftime('%d %b %Y %H:%M'), 
+                        'subject': message.subject,
+                        'body': message.body,
+                        'category_id': message.category_id.category_id,
+                        'category_name': message.category_id.category_name,
+                        'color': message.category_id.color,
+                    })
 
             return Response(serialized_messages, status=status.HTTP_200_OK)
 

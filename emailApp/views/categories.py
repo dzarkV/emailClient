@@ -6,54 +6,50 @@ from emailApp.models.categories import Categories
 from emailApp.models.categories_users import CategoriesUser
 from emailApp.serializers.categories_serializer import CategoriesSerializer
 
-from django.db import transaction
 
 class CategoryView(APIView):
 
     def get(self, request):
-        # Obtener el parámetro de email de la solicitud
-        email = request.GET.get('email', None)
-
-        # Validar que se proporcionó el parámetro email
-        if email is None:
-            return Response({'error': 'El parámetro email es requerido.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Obtener las categorías asociadas al usuario con el email proporcionado
         try:
-            user_categories = CategoriesUser.objects.filter(email=email).values_list('category_id', flat=True)
-            # Filtrar las categorías en base a las asociadas al usuario
-            categories = Categories.objects.filter(category_id__in=user_categories)
-        except CategoriesUser.DoesNotExist:
-            # Si no se encuentra ninguna categoría asociada al usuario, devolver un arreglo vacío y un código 400
-            return Response([], status=status.HTTP_400_BAD_REQUEST)
+            email = request.GET.get('email', None)
 
-        # Serializar las categorías
-        serializer = CategoriesSerializer(categories, many=True)
-        
-        # Devolver la respuesta
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            if not User.objects.filter(email=email).exists():
+                return Response({'message': 'Invalid email(s)'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if email is None:
+                return Response({'message': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                user_categories = CategoriesUser.objects.filter(email=email).values_list('category_id', flat=True)
+                categories = Categories.objects.filter(category_id__in=user_categories)
+            except CategoriesUser.DoesNotExist:
+                return Response([], status=status.HTTP_400_BAD_REQUEST)
+
+            serializer = CategoriesSerializer(categories, many=True)
+            
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
     def post(self, request):
-        # Serializar los datos recibidos en la solicitud
-        serializer = CategoriesSerializer(data=request.data)
+        try:
+            serializer = CategoriesSerializer(data=request.data)
 
-        # Validar y guardar la nueva categoría si los datos son válidos
-        if serializer.is_valid():
-            # Guardar la categoría
-            category_instance = serializer.save()
+            if serializer.is_valid():
 
-            # Obtener el usuario correspondiente
-            user_email = request.data.get('email')
-            user_instance = User.objects.get(email=user_email)
+                category_instance = serializer.save()
 
-            # Crear la relación en CategoriesUser
-            CategoriesUser.objects.create(
-                email=user_instance,
-                category_id=category_instance
-            )
+                user_email = request.data.get('email')
+                user_instance = User.objects.get(email=user_email)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                CategoriesUser.objects.create(
+                    email=user_instance,
+                    category_id=category_instance
+                )
 
-        # Devolver errores si los datos no son válidos
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'Category created successfully'}, status=status.HTTP_201_CREATED)
+            
+            return Response({'message': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

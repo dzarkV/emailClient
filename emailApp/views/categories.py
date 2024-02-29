@@ -8,8 +8,20 @@ from emailApp.serializers.categories_serializer import CategoriesSerializer
 
 
 class CategoryView(APIView):
+    """
+    API View for handling category-related operations.
+    """
 
     def get(self, request):
+        """
+        Retrieve categories associated with a given user's email.
+
+        Parameters:
+        - email (str): The email of the user to retrieve categories for.
+
+        Returns:
+        - Response: JSON response containing categories or an error message.
+        """
         try:
             email = request.GET.get('email', None)
 
@@ -33,6 +45,16 @@ class CategoryView(APIView):
     
 
     def post(self, request):
+        """
+        Create a new category and associate it with a user.
+
+        Parameters:
+        - email (str): The email of the user to associate the category with.
+        - Other category-related fields.
+
+        Returns:
+        - Response: JSON response indicating success or failure.
+        """
         try:
             serializer = CategoriesSerializer(data=request.data)
 

@@ -8,6 +8,16 @@ from django.apps import AppConfig
 
 @receiver(post_migrate)
 def create_default_category(sender, **kwargs):
+    """
+    Signal receiver function to create a default category and relationships after migrations.
+
+    Parameters:
+    - sender: The sender of the signal.
+    - kwargs: Additional keyword arguments.
+
+    Returns:
+    - None
+    """
     if Categories.objects.filter(category_id=0).exists():
         return
 

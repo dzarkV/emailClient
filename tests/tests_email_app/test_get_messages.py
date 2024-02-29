@@ -4,6 +4,7 @@ from rest_framework import status
 from emailApp.models.user import User
 from emailApp.models.message_from import MessageFrom
 from emailApp.models.message_to import MessageTo
+from emailApp.models.categories import Categories
 
 class Test_get_messages(APITestCase):
     def setUp(self):
@@ -12,9 +13,9 @@ class Test_get_messages(APITestCase):
         self.client = APIClient()
 
     def test_get_messages(self):
-        message_from = MessageFrom.objects.create(from_user=self.user_from, subject='Test Subject', body='Test Body', category_id=1)
+        message_from = MessageFrom.objects.create(from_user=self.user_from, subject='Test Subject', body='Test Body', category_id=Categories.objects.get(category_id=0 ))
         message_to = MessageTo.objects.create(message_id=message_from, to_user=self.user_to)
-        response = self.client.get('/messages/getAll', {'mail': self.user_from.email})
+        response = self.client.get('/messages/getAll', {'email': self.user_from.email})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['message_id'], message_from.id)
         self.assertEqual(response.data[0]['from_user'], self.user_from.email)

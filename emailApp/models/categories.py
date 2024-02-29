@@ -3,7 +3,7 @@ from django.db import models
 
 class Categories(models.Model):
     """
-    Categories
+    Model representing categories.
     """
 
     category_id = models.AutoField(primary_key=True)

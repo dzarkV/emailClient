@@ -9,9 +9,21 @@ from rest_framework.exceptions import ValidationError
 
 
 class MessageViewFilter(APIView):
-
+    """
+    API View for filtering and managing messages based on category and user email.
+    """
 
     def get(self, request):
+        """
+        Retrieve messages for a specified user and category.
+
+        Parameters:
+        - category_id (int): The ID of the category for filtering messages.
+        - email (str): The email of the user to retrieve messages for.
+
+        Returns:
+        - Response: JSON response containing filtered messages or an error message.
+        """
         try:
             category_id = request.query_params.get('category_id')
             email = request.query_params.get('email', None)
@@ -49,6 +61,15 @@ class MessageViewFilter(APIView):
         
         
     def patch(self, request):
+        """
+        Deactivate a message by setting its 'isActive' field to False.
+
+        Parameters:
+        - message_id (int): The ID of the message to deactivate.
+
+        Returns:
+        - Response: JSON response indicating success or failure.
+        """
         try:
             message_id = request.data.get('message_id')
 

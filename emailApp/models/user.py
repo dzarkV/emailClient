@@ -51,7 +51,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     for client authentication.
     """
 
-    # id = models.AutoField(primary_key=True)
     email = models.EmailField('email', primary_key=True, max_length=30)
     password = models.CharField('password', max_length=256)
     name = models.CharField('name', max_length=30)

@@ -106,6 +106,16 @@ class MessageView(APIView):
             return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     def patch(self, request):
+        """
+        Update the category of a message.
+
+        Parameters:
+        - message_id (int): The ID of the message to update.
+        - category_id (int): The ID of the new category to assign to the message.
+
+        Returns:
+        - Response: JSON response indicating success or failure.
+        """
         try:
             message_id = request.data.get('message_id')
             new_category_id = request.data.get('category_id')

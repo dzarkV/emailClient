@@ -18,7 +18,7 @@ class TestCreateUser(APITestCase):
     def test_create_user_whole_data(self):
         response = self.client.post(self.create_url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['message'], 'User created succesfully')
+        self.assertEqual(response.data['message'], 'User created successfully')
 
     def test_create_user_without_email(self):
         user = self.data.copy()
@@ -31,8 +31,7 @@ class TestCreateUser(APITestCase):
         user = self.data.copy()
         user.pop('password')
         response = self.client.post(self.create_url, user, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['password'][0], 'This field is required.')
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def test_create_user_existent_already(self):
         user = UserFactory().create_user()

@@ -23,6 +23,7 @@ class TestLogin(APITestCase):
     def test_login_existent_email_wrong_password(self):
         user = UserFactory().create_user()
         user.password = 'wrong_password'
+        user.email = 'email@vertech.com'
         response = self.client.post(self.login_url, UserSerializer(user).data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['message'], 'Invalid email or password')

@@ -10,15 +10,15 @@ class TestCreateUser(APITestCase):
 
     create_url = '/users/create'
     data = {
-        'email': 'test@mail.com',
-        'password': 'password',
-        'name': 'test'
+        "email": "test@mail.com",
+        "password": "password",
+        "name": "test"
     }
 
     def test_create_user_whole_data(self):
         response = self.client.post(self.create_url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['message'], 'User created succesfully')
+        self.assertEqual(response.data['message'], 'User created successfully')
 
     def test_create_user_without_email(self):
         user = self.data.copy()

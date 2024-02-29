@@ -10,9 +10,9 @@ class TestCreateUser(APITestCase):
 
     create_url = '/users/create'
     data = {
-        'email': 'test@mail.com',
-        'password': 'password',
-        'name': 'test'
+        "email": "test@mail.com",
+        "password": "password",
+        "name": "test"
     }
 
     def test_create_user_whole_data(self):

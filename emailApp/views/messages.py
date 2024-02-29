@@ -26,7 +26,6 @@ class MessageView(APIView):
         """
         try:
             user_email = request.query_params.get('email')
-            print(user_email)
             from_messages = MessageFrom.objects.filter(from_user=user_email)
             to_messages = MessageTo.objects.filter(to_user=user_email)
 

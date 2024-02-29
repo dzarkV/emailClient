@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-# from django.contrib.auth.hashers import make_password
+import bcrypt
 
 
 class UserManager(BaseUserManager):
@@ -18,8 +18,7 @@ class UserManager(BaseUserManager):
 
         if not email:
             raise ValueError('Users must be email address!')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
-        user.set_password(password)
+        user = self.model(email=self.normalize_email(email), password=password, **extra_fields)
         user.save(using=self._db)
         return user
 
@@ -59,6 +58,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField('created at', auto_now_add=True)
     is_staff = models.BooleanField('is_staff', default=False)
 
+    def save(self, *args, **kwargs):
+        """
+        Overwrite the save method to hash the password
+        """
+        if self.is_superuser:
+            self.set_password(self.password)
+            super(User, self).save(*args, **kwargs)
+        else:
+            self.password = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            super(User, self).save(*args, **kwargs)
 
     objects = UserManager()
     USERNAME_FIELD = 'email'

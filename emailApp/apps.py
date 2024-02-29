@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class EmailappConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "emailApp"
+
+    def ready(self):
+        import emailApp.signals

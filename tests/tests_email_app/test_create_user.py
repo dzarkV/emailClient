@@ -31,7 +31,7 @@ class TestCreateUser(APITestCase):
         user = self.data.copy()
         user.pop('password')
         response = self.client.post(self.create_url, user, format='json')
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_user_existent_already(self):
         user = UserFactory().create_user()

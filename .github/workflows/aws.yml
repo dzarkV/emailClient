@@ -8,6 +8,7 @@ on:
   # push:
   #   branches: ["main"]
 
+
 env:
   AWS_REGION: us-east-1 # set this to your preferred AWS region, e.g. us-west-1
   ECS_CLUSTER: email_app_home_9 # set this to your Amazon ECS cluster name

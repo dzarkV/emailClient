@@ -44,8 +44,7 @@ class MessageView(APIView):
 
             serialized_messages = []
             for message in all_messages:
-                if message.isActive == True:
-                    serialized_messages.append({
+                serialized_messages.append({
                         'message_id': message.id,
                         'from_user_name': message.from_user.name,  
                         'from_user': message.from_user.email,
@@ -57,7 +56,7 @@ class MessageView(APIView):
                         'category_id': message.category_id.category_id,
                         'category_name': message.category_id.category_name,
                         'color': message.category_id.color,
-                    })
+                    })    
 
             return Response(serialized_messages, status=status.HTTP_200_OK)
 

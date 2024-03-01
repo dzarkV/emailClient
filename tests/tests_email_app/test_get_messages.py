@@ -44,19 +44,6 @@ class TestGetAllMessages(APITestCase):
         response = self.client.get('/messages/getAll', {'mail': 'invalid@example.com'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_get_messages_inactive(self):
-        """
-        Test retrieving messages with inactive status.
-
-        Returns:
-        - None
-        """
-        message_from = MessageFrom.objects.create(from_user=self.user_from, subject='Inactive Subject', body='Inactive Body', category_id=Categories.objects.get(category_id=0), isActive=False)
-        message_to = MessageTo.objects.create(message_id=message_from, to_user=self.user_to)
-        response = self.client.get('/messages/getAll', {'email': self.user_from.email})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
-
     def test_get_messages_multiple(self):
         """
         Test retrieving multiple messages for a user.

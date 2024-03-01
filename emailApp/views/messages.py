@@ -56,6 +56,7 @@ class MessageView(APIView):
                         'category_id': message.category_id.category_id,
                         'category_name': message.category_id.category_name,
                         'color': message.category_id.color,
+                        'isActive' : message.isActive,
                     })    
 
             return Response(serialized_messages, status=status.HTTP_200_OK)

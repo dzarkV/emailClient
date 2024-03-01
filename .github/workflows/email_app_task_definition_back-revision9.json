@@ -2,6 +2,11 @@
   "taskDefinitionArn": "arn:aws:ecs:us-east-1:637423626700:task-definition/email_app_task_definition_back:9",
   "containerDefinitions": [
     {
+      "name": "back_email_app_container",
+      "image": "637423626700.dkr.ecr.us-east-1.amazonaws.com/home9/email_app_repository_back",
+      "cpu": 0,
+      "memory": 1024,
+      "memoryReservation": 1024,
       "secrets": [
         {
           "name": "DB_NAME",
@@ -19,14 +24,7 @@
           "name": "DB_USER",
           "valueFrom": "arn:aws:secretsmanager:us-east-1:637423626700:secret:prod/email/secret_name-C7KV8t:username::"
         }
-      ]
-    },
-    {
-      "name": "back_email_app_container",
-      "image": "637423626700.dkr.ecr.us-east-1.amazonaws.com/home9/email_app_repository_back",
-      "cpu": 0,
-      "memory": 1024,
-      "memoryReservation": 1024,
+      ],
       "portMappings": [
         {
           "name": "back_email_app_container-8000-tcp",

@@ -9,13 +9,14 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from dotenv import load_dotenv
 from pathlib import Path
 import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     'django_extensions',
-    'emailApp'
+    'drf_yasg',
+    'emailApp',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +83,7 @@ DEBUG = os.environ.get("DEBUG")
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -88,10 +91,11 @@ DATABASES = {
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASS"),
         "HOST": os.environ.get("DB_HOST"),
-        "PORT": "5432",
+       "PORT": "5432",
     }
 }
 
+ 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

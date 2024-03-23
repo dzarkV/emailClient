@@ -35,6 +35,8 @@ class UsersLogin(generics.CreateAPIView):
                 return Response({
                     'message': 'User successfully logged in',
                     'data': {
+                        'email': user.email,
+                        'name': user.name,
                         'refresh': str(refresh),
                         'access': str(refresh.access_token)
                     }

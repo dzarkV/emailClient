@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from emailApp.models.user import User
 from emailApp.models.categories import Categories
 from emailApp.models.categories_users import CategoriesUser
@@ -12,27 +13,20 @@ class CategoryView(APIView):
     API View for handling category-related operations.
     """
 
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         """
-        Retrieve categories associated with a given user's email.
-
-        Parameters:
-        - email (str): The email of the user to retrieve categories for.
+        Retrieve categories associated with logged in user.
 
         Returns:
         - Response: JSON response containing categories or an error message.
         """
         try:
-            email = request.GET.get('email', None)
-
-            if not User.objects.filter(email=email).exists():
-                return Response({'message': 'Invalid email(s)'}, status=status.HTTP_400_BAD_REQUEST)
-
-            if email is None:
-                return Response({'message': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+            user_id = request.user.id            
 
             try:
-                user_categories = CategoriesUser.objects.filter(email=email).values_list('category_id', flat=True)
+                user_categories = CategoriesUser.objects.filter(user_id=user_id).values_list('category_id', flat=True)
                 categories = Categories.objects.filter(category_id__in=user_categories)
             except CategoriesUser.DoesNotExist:
                 return Response([], status=status.HTTP_400_BAD_REQUEST)
@@ -55,18 +49,19 @@ class CategoryView(APIView):
         Returns:
         - Response: JSON response indicating success or failure.
         """
+        
         try:
+            user_id = request.user.id
             serializer = CategoriesSerializer(data=request.data)
 
             if serializer.is_valid():
 
                 category_instance = serializer.save()
-
-                user_email = request.data.get('email')
-                user_instance = User.objects.get(email=user_email)
+                
+                user_instance = User.objects.get(id=user_id)
 
                 CategoriesUser.objects.create(
-                    email=user_instance,
+                    user_id=user_instance,
                     category_id=category_instance
                 )
 

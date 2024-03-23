@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from emailApp.models.user import User
 from emailApp.models.categories import Categories
 from emailApp.models.message_from import MessageFrom
@@ -16,6 +17,7 @@ class MessageView(APIView):
 
     Supports GET to retrieve messages and POST to create new messages.
     """
+    permission_classes = [IsAuthenticated]
     
     def get(self, request=None):
         """
@@ -25,9 +27,11 @@ class MessageView(APIView):
         :return: Response containing serialized messages or an error message.
         """
         try:
-            user_email = request.query_params.get('email')
-            from_messages = MessageFrom.objects.filter(from_user=user_email)
-            to_messages = MessageTo.objects.filter(to_user=user_email)
+            user_id = request.user.id
+            
+            from_messages = MessageFrom.objects.filter(from_user=user_id)
+            
+            to_messages = MessageTo.objects.filter(to_user=user_id)
 
             if not from_messages.exists() and not to_messages.exists():
                 return Response({'message': 'No messages for the specified user'}, status=status.HTTP_400_BAD_REQUEST)
@@ -73,34 +77,45 @@ class MessageView(APIView):
         :return: Response indicating success or failure.
         """
         try:
-            to_user_exists = User.objects.filter(email=request.data['to_user']).exists()
-            from_user_exists = User.objects.filter(email=request.data['from_user']).exists()
+            
+            user_id = request.user.id
+            user_email = request.user.email            
+            
+            to_user = User.objects.get(email=request.data['to_user'])            
+            
+            from_user_exists = User.objects.filter(id=user_id).exists()
 
-            if not to_user_exists or not from_user_exists:
-                return Response({'message': 'Invalid email(s)'}, status=status.HTTP_400_BAD_REQUEST)
-
+            if not to_user:
+                 return Response({'message': 'Recipient doesn\'t exist'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not from_user_exists:
+                 return Response({'message:' 'Sender doesn\'t exist'}, status=status.HTTP_400_BAD_REQUEST)            
+            
             message_data = {
                 'subject': request.data['subject'],
                 'body': request.data['body'],
-                'from_user': User.objects.get(email=request.data['from_user']),
+                'from_user': user_id,
                 'category_id': request.data.get('category_id', 0)
             } 
             serializer_from = MessageFromSerializer(data=message_data)
             
             if serializer_from.is_valid():
-                instance_from = serializer_from.save(from_user=User.objects.get(email=request.data['from_user']))
+                instance_from = serializer_from.save(from_user=User.objects.get(email=user_email))
                 message_to_data = {
                     'message_id': instance_from.id,  
-                    'to_user': User.objects.get(email=request.data['to_user']),
+                    'to_user': to_user.id,
                 }
                 serializer_to = MessageToSerializer(data=message_to_data)
-                if serializer_to.is_valid():
+                if serializer_to.is_valid():                    
                     serializer_to.save()
                     return Response({'message': 'Message sent successfully'}, status=status.HTTP_201_CREATED)
                 else:
                     return Response({'message': 'Invalid data for MessageTo'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
+            else:                
                 return Response({'message': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except User.DoesNotExist:
+                 return Response({'message': 'Recipient doesn\'t exist'}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             return Response({'message': 'Uncontrolled error: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

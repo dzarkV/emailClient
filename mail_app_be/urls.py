@@ -22,6 +22,9 @@ from drf_yasg import openapi
 from rest_framework import permissions
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from emailApp.views import user_create, user_list, messages, login, categories, messages_filter
+from rest_framework_simplejwt.views import (    
+    TokenRefreshView,
+)
 ...
 
 
@@ -58,6 +61,8 @@ urlpatterns = [
          name="categories list"),
     path("messages/delete", messages_filter.MessageViewFilter.as_view(),
          name="delete message"),
+    
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0),
          name='schema-json'),

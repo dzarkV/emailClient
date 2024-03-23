@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-import bcrypt
+from django.contrib.auth.hashers import make_password
 
 
 class UserManager(BaseUserManager):
@@ -51,7 +51,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     for client authentication.
     """
 
-    email = models.EmailField('email', primary_key=True, max_length=30)
+    id = models.AutoField(primary_key=True)
+    email = models.EmailField('email', unique=True, max_length=30)
     password = models.CharField('password', max_length=256)
     name = models.CharField('name', max_length=30)
     created_at = models.DateTimeField('created at', auto_now_add=True)
@@ -65,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.set_password(self.password)
             super(User, self).save(*args, **kwargs)
         else:
-            self.password = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            self.password = make_password(self.password)
             super(User, self).save(*args, **kwargs)
 
     objects = UserManager()

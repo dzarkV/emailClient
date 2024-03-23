@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from emailApp.models.categories import Categories
 from emailApp.models.message_from import MessageFrom
 from emailApp.models.message_to import MessageTo
@@ -12,7 +13,7 @@ class MessageViewFilter(APIView):
     """
     API View for filtering and managing messages based on category and user email.
     """
-
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         """
         Retrieve messages for a specified user and category.
@@ -25,15 +26,16 @@ class MessageViewFilter(APIView):
         - Response: JSON response containing filtered messages or an error message.
         """
         try:
+            user_id = request.user.id
             category_id = request.query_params.get('category_id')
-            email = request.query_params.get('email', None)
+            # email = request.query_params.get('email', None)
 
-            if category_id is None or email is None:
+            if category_id is None:
                 return Response({'message': 'Both category_id and email are required parameters.'}, status=status.HTTP_400_BAD_REQUEST)
 
             category = get_object_or_404(Categories, category_id=category_id)
             
-            messages = MessageTo.objects.filter(to_user=email, message_id__category_id=category)
+            messages = MessageTo.objects.filter(to_user=user_id, message_id__category_id=category)
 
             if not messages.exists():
                 return Response({'message': 'No messages for the specified user and category'}, status=status.HTTP_400_BAD_REQUEST)

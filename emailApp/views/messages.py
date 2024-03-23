@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from emailApp.models.user import User
 from emailApp.models.categories import Categories
 from emailApp.models.message_from import MessageFrom
@@ -16,6 +17,7 @@ class MessageView(APIView):
 
     Supports GET to retrieve messages and POST to create new messages.
     """
+    permission_classes = [IsAuthenticated]
     
     def get(self, request=None):
         """
@@ -25,6 +27,8 @@ class MessageView(APIView):
         :return: Response containing serialized messages or an error message.
         """
         try:
+            user_id = request.user.email
+            print(user_id)
             user_email = request.query_params.get('email')
             from_messages = MessageFrom.objects.filter(from_user=user_email)
             to_messages = MessageTo.objects.filter(to_user=user_email)
@@ -73,22 +77,24 @@ class MessageView(APIView):
         :return: Response indicating success or failure.
         """
         try:
+            user_email = request.user.email
+            
             to_user_exists = User.objects.filter(email=request.data['to_user']).exists()
-            from_user_exists = User.objects.filter(email=request.data['from_user']).exists()
+            from_user_exists = User.objects.filter(email=user_email).exists()
 
             if not to_user_exists or not from_user_exists:
                 return Response({'message': 'Invalid email(s)'}, status=status.HTTP_400_BAD_REQUEST)
-
+            
             message_data = {
                 'subject': request.data['subject'],
                 'body': request.data['body'],
-                'from_user': User.objects.get(email=request.data['from_user']),
+                'from_user': User.objects.get(email=user_email),
                 'category_id': request.data.get('category_id', 0)
             } 
             serializer_from = MessageFromSerializer(data=message_data)
             
             if serializer_from.is_valid():
-                instance_from = serializer_from.save(from_user=User.objects.get(email=request.data['from_user']))
+                instance_from = serializer_from.save(from_user=User.objects.get(email=user_email))
                 message_to_data = {
                     'message_id': instance_from.id,  
                     'to_user': User.objects.get(email=request.data['to_user']),
